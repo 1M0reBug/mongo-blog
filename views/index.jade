@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1.text-center= title
+  p.text-center Welcome to This Awesome Blog !
+  .row
+      .col-md-offset-4
+          #blog-articles.col-md-8(ng-controller="showArticles")
+                article(ng-repeat="article in articles")
+                    //- .author-name Written by {{value.author}}
+                    //- .date On {{value.date}}
+                    //- .body {{value.body}}
+                    {{article.body}}
