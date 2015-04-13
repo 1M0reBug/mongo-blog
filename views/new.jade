@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  .blog-masthead
+    .container
+      nav.blog-nav
+        a.blog-nav-item(href="/") Home
+        a.blog-nav-item.active New
+  div.container(ng-app="App")
+    .blog-header
+      h1.blog-title Add a new article
+    .alert.alert-danger(ng-if="error") {{error.message}}
+    form(ng-controller="addArticle")
+      .form-group
+        label(for="author") Who are you ? 
+        input#author.form-control(type="text", placeholder="Your name", name="blog-author", ng-model="article.author", required)
+      .form-group
+        label(for="title") Put a title
+        input#title.form-control(type="text", placeholder="title", name="blog-title", ng-model="article.title", required)
+      .form-group
+        label(for="body") What do you want to tell us ?
+        textarea#body.form-control(name="blog-body", ng-model="article.body", required)
+      button.btn.btn-primary(ng-click="sendArticle()") Submit
