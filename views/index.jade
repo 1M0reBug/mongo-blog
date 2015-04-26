@@ -6,13 +6,25 @@ block content
       nav.blog-nav
         a.blog-nav-item.active Home
         a.blog-nav-item(href="/articles/new") New
-  div.container(ng-app="App")
+  div.container(ng-app="App", ng-controller="showArticles")
     div.blog-header
       h1.blog-title= title
       p.lead.blog-description Welcome to This Awesome Blog !
     .row
-      .col-sm-8.blog-main#blog-articles(ng-controller="showArticles")
+      .col-sm-8.blog-main#blog-articles
         div.blog-post(ng-repeat="article in articles")
           h2.blog-post-title {{article.title}}
           p.blog-post-meta Written by #[a(target="_blank", href="/users/{{article.author | lowercase}}"){{article.author}}] On {{article.date}}
           p {{article.body}}
+    pre {{pagination | json}}
+    nav
+      ul.pagination-lg.pagination
+        li(ng-class="{'disabled':pagination.currentIsFirst}")
+          a(ng-href="/?page={{pagination.currentPage - 1}}", aria-label="Previous")
+            span(aria-hidden="true") &laquo;
+        li(ng-repeat="n in pagination.numberOfPages track by $index")
+          a(ng-href="/?page={{$index +  1}}") {{$index + 1}}
+        li(ng-class="{'disabled' : pagination.currentIsLast}")
+          a(ng-href="/?page={{pagination.currentPage + 1}}", aria-label="Next")
+            span(aria-hidden="true") &raquo;
+

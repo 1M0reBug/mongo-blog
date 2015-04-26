@@ -15,7 +15,7 @@ router.get('/articles', function(req, res){
 	//On laisse la possibilité de la pagination
 	var page = req.query.page;
 	page = page > numberOfPage?numberOfPage:page;
-	page = page<=1?1:page;
+	page = (page<=1 || page > numberOfPage) ?1:page;
 
 	var queryString = "{";
 	if ( req.query.title !== null){
