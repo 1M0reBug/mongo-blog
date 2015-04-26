@@ -1,19 +1,15 @@
 extends layout
-
 block content
-  .blog-masthead
-    .container
-      nav.blog-nav
-        a.blog-nav-item.active Home
-        a.blog-nav-item(href="/articles/new") New
-  div.container(ng-app="App")
-    div.blog-header
-      h1.blog-title= title
-      p.lead.blog-description Welcome to This Awesome Blog !
-    .row
-      .col-sm-8.blog-main#blog-articles(ng-controller="showArticles")
-        div.blog-post(ng-repeat="article in articles")
-            h2.blog-post-title {{article.title}}
-            p.blog-post-meta Written by #[a(target="_blank", href="/users/{{article.author | lowercase}}"){{article.author}}] On {{article.date}}
-            p {{article.body}}
-
+    .blog-masthead
+        .container
+            nav.blog-nav
+                a.blog-nav-item.active Home
+                a.blog-nav-item(href="/articles/new") New
+    div.container
+        .row
+            .col-sm-8.blog-main#blog-articles
+                div.blog-post(ng-repeat="article in articles")
+                    h2.blog-post-title
+                        a(href="/article._id") {{article.title}}
+                    p.blog-post-meta Written by #[a(target="_blank", href="/users/{{article.author | lowercase}}"){{article.author}}] On {{article.date}}
+                    p {{article.body}}
