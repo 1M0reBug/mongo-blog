@@ -30,7 +30,9 @@ router.get('/articles', function(req, res){
 /* GET Total number of articles */
 router.get('/count', function(req,res){
 	var db = req.db;
-	res.json(getCount(db));
+	db.collection('articles').count(function (err, items) {
+		res.json(items);
+	})
 
 });
 
