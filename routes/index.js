@@ -7,4 +7,10 @@ router.get('/:var(index)?', function(req, res, next) {
 });
 
 
+/* GET blog article */
+router.get('/:id', function(res, res, next) {
+  res.render('article', {title : 'My Awesome blog !'});
+})
+
+
 module.exports = router;

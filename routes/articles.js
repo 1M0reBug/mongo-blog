@@ -41,13 +41,29 @@ router.get('/new', function(req, res){
 	res.render('new', {title: "My Awesome blog !"});
 });
 
+
+router.param('id', function(req, res, next, id) {
+	var regex = /[a-zA-Z0-9]{24}/;
+	var captures;
+	if(captures = regex.exec(id)) {
+		req.params.id = id;
+		next();
+	} else {
+		next('/');
+	}
+});
+
 router.get('/:id', function (req, res) {
 	var db = req.db;
 
-	db.collection('articles').find({"_id" : "ObjectId("+id+")"}).toArray(function (err, items) {
-		res.render('article', items);
+	var ObjectId = require('mongodb').ObjectID;
+
+	var id = req.params.id;
+
+	db.collection('articles').find({'_id' : new ObjectId(id)}).toArray(function (err, items) {
+		res.json(items);
 	});
-})
+});
 
 /* POST new article to mongo */
 router.post("/new", function(req, res){
@@ -55,6 +71,8 @@ router.post("/new", function(req, res){
 	var db = req.db;
 
 	req.body.date =  now();
+
+	req.body.titleId = req.body.title.toLowerCase().replace(/\s+/g, '-');
 
 
 	db.collection('articles').insert(req.body, function(err, result){

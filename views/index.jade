@@ -1,30 +1,37 @@
 extends layout
 
 block content
-  .blog-masthead
+  .blog-masthead#head
     .container
       nav.blog-nav
         a.blog-nav-item.active Home
         a.blog-nav-item(href="/articles/new") New
   div.container(ng-app="App", ng-controller="showArticles")
-    div.blog-header
+    div.blog-header(ng-if="articles")
       h1.blog-title= title
       p.lead.blog-description Welcome to This Awesome Blog !
     .row
       .col-sm-8.blog-main#blog-articles
         div.blog-post(ng-repeat="article in articles")
-          h2.blog-post-title {{article.title}}
+          h2.blog-post-title
+            a(ng-click="goToArticle(article._id)", ng-href='/{{article._id}}') {{article.title}}
           p.blog-post-meta Written by #[a(target="_blank", href="/users/{{article.author | lowercase}}"){{article.author}}] On {{article.date}}
           p {{article.body}}
-    pre {{pagination | json}}
-    nav
+
+    div.blog-article(ng-if="article" )
+      .blog-header
+        h1.blog-title {{article.title}}
+        p.blog-post-meta Written by #[a(target="_blank", href="/users/{{article.author | lowercase}}"){{article.author}}] On {{article.date}}
+        p {{article.body}}
+
+    nav(ng-if="pagination")
       ul.pagination-lg.pagination
         li(ng-class="{'disabled':pagination.currentIsFirst}")
-          a(ng-href="/?page={{pagination.currentPage - 1}}", aria-label="Previous")
+          a(ng-href="/?page={{pagination.currentPage - 1}}", ng-click="changePage()", aria-label="Previous")
             span(aria-hidden="true") &laquo;
-        li(ng-repeat="n in pagination.numberOfPages track by $index")
-          a(ng-href="/?page={{$index +  1}}") {{$index + 1}}
+        li(ng-repeat="n in pagination.numberOfPages track by $index", ng-class="{'active' : pagination.currentPage == ($index + 1)}")
+          a(ng-href="/?page={{$index +  1}}", ng-click="changePage()") {{$index + 1}}
         li(ng-class="{'disabled' : pagination.currentIsLast}")
-          a(ng-href="/?page={{pagination.currentPage + 1}}", aria-label="Next")
+          a(ng-href="/?page={{pagination.currentPage + 1}}", ng-click="changePage()", aria-label="Next")
             span(aria-hidden="true") &raquo;
 

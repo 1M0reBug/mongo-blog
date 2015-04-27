@@ -8,8 +8,8 @@ var App = angular.module('App', []);
 		$locationProvider.html5Mode({enabled:true, requireBase : false});
 	}]);
 
-	App.controller("showArticles", ['$scope', '$http','$location',
-		function($scope, $http,$location){
+	App.controller("showArticles", ['$scope', '$http','$location','$window','$anchorScroll',
+		function($scope, $http,$location, $window, $anchorScroll){
 			$scope.getArticles = function(){
 				$scope.numberOfPages = 0;
 				$http.get('/articles/count')
@@ -17,7 +17,7 @@ var App = angular.module('App', []);
 						var tenth = Math.ceil(response.data / 10);
 						$scope.pagination = {
 							numberOfPages: new Array(tenth),
-							currentPage: $location.search().page || 1
+							currentPage: parseInt($location.search().page) || 1
 						};
 						var _this = $scope.pagination;
 						$scope.pagination.currentIsFirst = _this.currentPage <= 1;
@@ -37,6 +37,17 @@ var App = angular.module('App', []);
 
 
 			};
+
+			$scope.changePage = function(){
+				$location.hash('head');
+				$anchorScroll();
+				$scope.getArticles();
+			};
+
+			$scope.goToArticle = function(id) {
+				var url = '/' + id
+				$window.location.replace(url);
+			}
 
 		$scope.getArticles();
 
@@ -67,6 +78,23 @@ var App = angular.module('App', []);
 				$scope.error = {message : "All fields are not full !"};
 			}
 		};
+	}]);
+
+	App.controller("showTheArticle", ['$scope', '$http', '$location', function($scope, $http, $location) {
+
+		$scope.getArticle = function(){
+			var id = $location.path();
+
+			var url = 'articles' + id;
+
+			$http.get( url )
+				.then(function(response) {
+					$scope.article = response.data[0];
+				});
+		}
+
+		$scope.getArticle();
+
 	}]);
 
 
